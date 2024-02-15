@@ -29,11 +29,11 @@ public class StudentController {
         return studentService.updateStudent(student);
     }
     @DeleteMapping("/{id}")
-    public Student deleteStudent(@PathVariable Long id){
-        return studentService.deleteStudent(id);
+    public void deleteStudent(@PathVariable Long id){
+        studentService.deleteStudent(id);
     }
     @GetMapping
-    public Collection<Student> getStudentsByAge(@RequestParam int age){
+    public List<Student> getStudentsByAge(@RequestParam int age){
         return studentService.getStudentsByAge(age);
     }
 }

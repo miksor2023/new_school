@@ -1,47 +1,52 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.exception.IncorrectIdException;
+import ru.hogwarts.school.exception.FacultyIdFailException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private Long idCounter = 0L;
+    private FacultyRepository facultyRepository;
+
+    public FacultyService() {
+        this.facultyRepository = facultyRepository;
+    }
+
     public Faculty postFaculty(Faculty faculty){
-        faculty.setId(++idCounter);
-        faculties.put(idCounter, faculty);
-        return faculty;
+        faculty.setId(null);
+        return facultyRepository.save(faculty);
     }
     public Faculty getFaculty(Long id){
         validateId(id);
-        return faculties.get(id);
+        return facultyRepository.findById(id).get();
     }
     public Faculty updateFaculty(Faculty faculty){
         validateId(faculty.getId());
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
     public Faculty deleteFaculty(Long id){
         validateId(id);
-        return faculties.remove(id);
+        Faculty facultYToDelete = facultyRepository.findById(id).get();
+        facultyRepository.deleteById(id);
+        return facultYToDelete;
     }
 
-    public Collection<Faculty> getFacultiesByColor(String color) {
-        List<Faculty> facultiesByColor = faculties.values().stream()
+    public List<Faculty> getFacultiesByColor(String color) {
+        List<Faculty> faculties = facultyRepository.findAll();
+        List<Faculty> facultiesByColor = faculties.stream()
                 .filter(faculty -> faculty.getColor().equals(color))
                 .collect(Collectors.toList());
         return facultiesByColor;
     }
-    public void validateId(Long id) throws IncorrectIdException {
-        if(!faculties.containsKey(id)){
-            throw new IncorrectIdException();
+    public void validateId(Long id) throws FacultyIdFailException {
+        if(!facultyRepository.existsById(id)){
+            throw new FacultyIdFailException(id);
         }
     }
 

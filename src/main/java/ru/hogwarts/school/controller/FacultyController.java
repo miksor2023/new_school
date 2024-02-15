@@ -29,11 +29,9 @@ public class FacultyController {
         return facultyService.updateFaculty(faculty);
     }
     @DeleteMapping("/{id}")
-    public Faculty deleteFaculty(@PathVariable Long id){
-        return facultyService.deleteFaculty(id);
-    }
+    public Faculty deleteFaculty(@PathVariable Long id){ return facultyService.deleteFaculty(id); }
     @GetMapping
-    public Collection<Faculty> getFacultiesByColor(@RequestParam String color){
+    public List<Faculty> getFacultiesByColor(@RequestParam String color){
         return facultyService.getFacultiesByColor(color);
     }
 }
