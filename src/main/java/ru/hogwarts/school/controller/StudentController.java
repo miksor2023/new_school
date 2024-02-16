@@ -22,6 +22,7 @@ public class StudentController {
     }
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id){
+
         return studentService.getStudent(id);
     }
     @PutMapping
@@ -34,6 +35,6 @@ public class StudentController {
     }
     @GetMapping
     public List<Student> getStudentsByAge(@RequestParam int age){
-        return studentService.getStudentsByAge(age);
+        return studentService.findByAge(age);
     }
 }

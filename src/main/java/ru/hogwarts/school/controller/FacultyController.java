@@ -32,6 +32,6 @@ public class FacultyController {
     public Faculty deleteFaculty(@PathVariable Long id){ return facultyService.deleteFaculty(id); }
     @GetMapping
     public List<Faculty> getFacultiesByColor(@RequestParam String color){
-        return facultyService.getFacultiesByColor(color);
+        return facultyService.findByColor(color);
     }
 }
