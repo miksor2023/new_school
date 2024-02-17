@@ -38,9 +38,5 @@ public class StudentService {
     public List<Student> findByAge(int age) {
         return studentRepository.findByAge(age);
     }
-    public void validateId(Long id) throws StudentIdFailException {
-        if(!studentRepository.existsById(id)) {
-            throw new StudentIdFailException(id);
-        }
-    }
+
 }

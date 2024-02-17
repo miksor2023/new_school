@@ -24,26 +24,22 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
     public Faculty getFaculty(Long id){
-        return facultyRepository.findById(id).orElseThrow(() -> FacultyIdFailException(id));
+        return facultyRepository.findById(id).orElseThrow(() -> new FacultyIdFailException(id));
     }
     public Faculty updateFaculty(Faculty faculty){
-        if(!FacultyRepository.existsById(faculty.getId())) {
-            throw new StudentIdFailException(faculty.getId());
+        if(!facultyRepository.existsById(faculty.getId())) {
+            throw new FacultyIdFailException(faculty.getId());
         }
         return facultyRepository.save(faculty);
     }
     public Faculty deleteFaculty(Long id){
-        Faculty facultYToDelete = facultyRepository.findById(id).orElseThrow(() -> FacultyIdFailException(id));
+        Faculty facultYToDelete = facultyRepository.findById(id).orElseThrow(() -> new FacultyIdFailException(id));
         facultyRepository.deleteById(id);
         return facultYToDelete;
     }
     public List<Faculty> findByColor(String color){
         return facultyRepository.findByColor(color);
     }
-    public void validateId(Long id) throws FacultyIdFailException {
-        if(!facultyRepository.existsById(id)){
-            throw new FacultyIdFailException(id);
-        }
-    }
+
 
 }
