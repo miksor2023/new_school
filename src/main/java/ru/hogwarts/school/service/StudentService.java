@@ -30,7 +30,7 @@ public class StudentService {
         return studentRepository.save(student);
     }
     public Student deleteStudent(Long id){
-        Student studentToDelete = studentRepository.findById(id).orElseThrow(() -> new StudentIdFailException(id));
+        Student studentToDelete = getStudent(id);
         studentRepository.deleteById(id);
         return studentToDelete;
     }
@@ -43,7 +43,7 @@ public class StudentService {
     public List<Student> findAll(){
         return studentRepository.findAll();
     }
-    public String getFaculty(Long id){
-        return studentRepository.findById(id).orElseThrow(() -> new StudentIdFailException(id)).getFaculty();
+    public Faculty getFaculty(Long id){
+        return getStudent(id).getFaculty();
     }
 }

@@ -5,6 +5,7 @@ import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.FacultyIdFailException;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -12,9 +13,11 @@ import java.util.Set;
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
+    public final StudentRepository studentRepository;
 
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
         this.facultyRepository = facultyRepository;
+        this.studentRepository = studentRepository;
     }
 
     public Faculty postFaculty(Faculty faculty){
@@ -31,7 +34,7 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
     public Faculty deleteFaculty(Long id){
-        Faculty facultYToDelete = facultyRepository.findById(id).orElseThrow(() -> new FacultyIdFailException(id));
+        Faculty facultYToDelete = getFaculty(id);
         facultyRepository.deleteById(id);
         return facultYToDelete;
     }
@@ -45,11 +48,10 @@ public class FacultyService {
     public List<Faculty>findAll(){
         return facultyRepository.findAll();
     }
-//    public List<Faculty>findIdNameColor(){
-//        return facultyRepository.findAll();
-//    };
-    public Set<Student>getSetOfStudents(Long id){
-        return facultyRepository.findById(id).orElseThrow(() -> new FacultyIdFailException(id)).getStudents();
+
+    public List<Student> findByFaculty_Id(Long id){
+        Faculty faculty = getFaculty(id);
+        return studentRepository.findByFaculty_Id(id);
     }
 
 

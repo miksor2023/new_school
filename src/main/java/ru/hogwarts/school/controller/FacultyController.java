@@ -45,7 +45,7 @@ public class FacultyController {
         return facultyService.findAll();
     }
     @GetMapping("/get-students-in-faculty")
-    public Set<Student> getStudents(@RequestParam Long id){
-        return facultyService.getSetOfStudents(id);
+    public List<Student> getStudents(@RequestParam Long id){
+        return facultyService.findByFaculty_Id(id);
     }
 }
