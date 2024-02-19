@@ -1,15 +1,13 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.FacultyIdFailException;
-import ru.hogwarts.school.exception.StudentIdFailException;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class FacultyService {
@@ -37,9 +35,23 @@ public class FacultyService {
         facultyRepository.deleteById(id);
         return facultYToDelete;
     }
+
     public List<Faculty> findByColor(String color){
         return facultyRepository.findByColor(color);
     }
+    public List<Faculty>findByNameOrColorIgnoreCase(String name, String color){
+        return facultyRepository.findByNameOrColorIgnoreCase(name, color);
+    };
+    public List<Faculty>findAll(){
+        return facultyRepository.findAll();
+    }
+//    public List<Faculty>findIdNameColor(){
+//        return facultyRepository.findAll();
+//    };
+    public Set<Student>getSetOfStudents(Long id){
+        return facultyRepository.findById(id).orElseThrow(() -> new FacultyIdFailException(id)).getStudents();
+    }
+
 
 
 }

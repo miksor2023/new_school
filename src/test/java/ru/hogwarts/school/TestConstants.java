@@ -1,9 +1,8 @@
 package ru.hogwarts.school;
 
-import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.entity.Faculty;
+import ru.hogwarts.school.entity.Student;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestConstants {
