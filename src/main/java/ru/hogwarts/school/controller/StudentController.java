@@ -18,33 +18,47 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student postStudent(@RequestBody Student student){
+    public Student postStudent(@RequestBody Student student) {
         return studentService.postStudent(student);
     }
-    @GetMapping("/student-by-id/{id}")
-    public Student getStudent(@PathVariable Long id){
-        return studentService.getStudent(id);
-    }
-    @GetMapping("/faculty-of-student/{id}")
-    public Faculty getFacultyOfStudent(@PathVariable Long id){
-        return studentService.getFaculty(id);
-    }
-    @GetMapping("/students-by-age")
-    public List<Student> getStudentsByAge(@RequestParam(required = false) Integer age, @RequestParam(required = false) Integer upperAge){
-        if(age != null && upperAge != null){
-            return studentService.findByAgeBetween(age, upperAge);
-        }
-        if(age != null){
-            return studentService.findByAge(age);
-        }
+
+    @GetMapping
+    @Operation(summary = "Get all students")
+    public List<Student> getAllStudents() {
         return studentService.findAll();
     }
+
+
+    @GetMapping(value = "/age",params = "age")
+    @Operation(summary = "Get students by age")
+    public List<Student> getStudentsByAge(@RequestParam Integer age) {
+        return studentService.findByAge(age);
+    }
+
+    @GetMapping(value = "/age/between", params = {"lowerAge, upperAge"})
+    @Operation(summary = "Get students by age between")
+    public List<Student> getStudentsByAgeBetween(@RequestParam Integer lowerAge, @RequestParam Integer upperAge) {
+        return studentService.findByAgeBetween(lowerAge, upperAge);
+    }
+
+    @GetMapping("{id}")
+    public Student getStudent(@PathVariable Long id) {
+        return studentService.getStudent(id);
+    }
+
+    @GetMapping("{id}/faculty")
+    public Faculty getFacultyOfStudent(@PathVariable Long id) {
+        return studentService.getFaculty(id);
+    }
+
+
     @PutMapping
-    public Student updateStudent(@RequestBody Student student){
+    public Student updateStudent(@RequestBody Student student) {
         return studentService.updateStudent(student);
     }
+
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id){
+    public void deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
     }
 

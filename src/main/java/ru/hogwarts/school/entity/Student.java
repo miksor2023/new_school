@@ -12,12 +12,15 @@ public class Student {
     private int age;
     @ManyToOne
     @JoinColumn(name = "faculty_id")
-    @JsonIgnore
     private Faculty faculty;
 
 
 
-    public Student (){};
+    public Student (){}
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     public Long getId() {
         return id;

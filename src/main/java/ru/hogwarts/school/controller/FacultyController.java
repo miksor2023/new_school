@@ -19,33 +19,49 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty postFaculty(@RequestBody Faculty faculty){
+    public Faculty postFaculty(@RequestBody Faculty faculty) {
         return facultyService.postFaculty(faculty);
     }
-    @GetMapping("/{id}")
-    public Faculty getFaculty(@PathVariable Long id){
-        return facultyService.getFaculty(id);
-    }
-    @PutMapping
-    public Faculty updateFaculty(@RequestBody Faculty faculty){
-        return facultyService.updateFaculty(faculty);
-    }
-    @DeleteMapping("/{id}")
-    public Faculty deleteFaculty(@PathVariable Long id){ return facultyService.deleteFaculty(id); }
+
     @GetMapping
-    public List<Faculty> getFacultiesByColor(@RequestParam String color){
-        return facultyService.findByColor(color);
-    }
-    @GetMapping("/name-or-color")
-    public List<Faculty> getFacultiesByNameOrColorIgnoreCase(@RequestParam String name, @RequestParam String color){
-        return facultyService.findByNameOrColorIgnoreCase(name, color);
-    }
-    @GetMapping("/get-all-faculties")
-    public List<Faculty>findAll(){
+    @Operation(summary = "Get all faculties")
+    public List<Faculty> findAll() {
         return facultyService.findAll();
     }
-    @GetMapping("/get-students-in-faculty")
-    public List<Student> getStudents(@RequestParam Long id){
+
+    @GetMapping(value = "/color", params = "color")
+    @Operation(summary = "Get faculties by color")
+    public List<Faculty> getFacultiesByColor(@RequestParam String color) {
+        return facultyService.findByColor(color);
+    }
+
+    @GetMapping(value = "/nameOrColor", params = "nameOrColor")
+    @Operation(summary = "Get faculties by name or color")
+    public List<Faculty> getFacultiesByNameOrColorIgnoreCase(@RequestParam String nameOrColor) {
+        return facultyService.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
+    }
+
+    @GetMapping("/{id}")
+    public Faculty getFaculty(@PathVariable Long id) {
+        return facultyService.getFaculty(id);
+    }
+
+    @GetMapping("/{id}/students")
+    public List<Student> getStudents(@RequestParam Long id) {
         return facultyService.findByFaculty_Id(id);
     }
+
+
+    @PutMapping
+    public Faculty updateFaculty(@RequestBody Faculty faculty) {
+        return facultyService.updateFaculty(faculty);
+    }
+
+
+    @DeleteMapping("/{id}")
+    public Faculty deleteFaculty(@PathVariable Long id) {
+        return facultyService.deleteFaculty(id);
+    }
+
+
 }
