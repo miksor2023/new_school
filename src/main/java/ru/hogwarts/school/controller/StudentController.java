@@ -29,13 +29,13 @@ public class StudentController {
     }
 
 
-    @GetMapping(value = "/age",params = "age")
+    @GetMapping(params = "age")
     @Operation(summary = "Get students by age")
     public List<Student> getStudentsByAge(@RequestParam Integer age) {
         return studentService.findByAge(age);
     }
 
-    @GetMapping(value = "/age/between", params = {"lowerAge, upperAge"})
+    @GetMapping(params = {"lowerAge, upperAge"})
     @Operation(summary = "Get students by age between")
     public List<Student> getStudentsByAgeBetween(@RequestParam Integer lowerAge, @RequestParam Integer upperAge) {
         return studentService.findByAgeBetween(lowerAge, upperAge);

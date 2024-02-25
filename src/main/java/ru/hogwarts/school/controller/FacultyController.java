@@ -29,13 +29,13 @@ public class FacultyController {
         return facultyService.findAll();
     }
 
-    @GetMapping(value = "/color", params = "color")
+    @GetMapping(params = "color")
     @Operation(summary = "Get faculties by color")
     public List<Faculty> getFacultiesByColor(@RequestParam String color) {
         return facultyService.findByColor(color);
     }
 
-    @GetMapping(value = "/nameOrColor", params = "nameOrColor")
+    @GetMapping(params = "nameOrColor")
     @Operation(summary = "Get faculties by name or color")
     public List<Faculty> getFacultiesByNameOrColorIgnoreCase(@RequestParam String nameOrColor) {
         return facultyService.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
