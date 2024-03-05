@@ -48,10 +48,9 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(() -> new StudentIdFailException(id));
     }
 
-    public Student deleteStudent(Long id) {
+    public void deleteStudent(Long id) {
         Student studentToDelete = getStudent(id);
         studentRepository.deleteById(id);
-        return studentToDelete;
     }
 
     public List<Student> findByAge(int age) {

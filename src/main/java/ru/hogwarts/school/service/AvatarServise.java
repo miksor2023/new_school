@@ -36,7 +36,7 @@ public class AvatarServise {
 
     public String uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
         Student student = studentService.getStudent(studentId);//меняем на getStudent для проверки на существующий
-        Path filePath = Path.of(avatarDir, student + "." + getExtensions(avatarFile.getOriginalFilename()));
+        Path filePath = Path.of(avatarDir, student.getName() + "_" + "id" + studentId + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try (
@@ -47,7 +47,7 @@ public class AvatarServise {
         ) {
             bis.transferTo(bos);
         }
-        Avatar avatar = new Avatar();
+        Avatar avatar = avatarRepository.findByStudentId(studentId).orElse(new Avatar());
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(avatarFile.getSize());
@@ -64,5 +64,9 @@ public class AvatarServise {
 
     public Avatar findAvatar(Long id) {
         return avatarRepository.findById(id).orElseThrow(() -> new AvatarIdFailException(id));
+    }
+    public Avatar findAvatarBySudentId(Long studentId){
+        Student student = studentService.getStudent(studentId);//если нет студента с введённым id, бросит исключение
+        return avatarRepository.findByStudentId(studentId).orElseThrow(() -> new AvatarIdFailException(studentId));
     }
 }

@@ -27,20 +27,19 @@ public class AvatarController {
 
     @PostMapping(value = "/{studentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadAvatar(@PathVariable Long studentId, @RequestParam MultipartFile avatar) throws IOException {
-        avatarServise.uploadAvatar(studentId, avatar);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(avatarServise.uploadAvatar(studentId, avatar));
     }
-    @GetMapping(value = "/{id}/avatar-from-db")
-    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long id) {
-        Avatar avatar = avatarServise.findAvatar(id);
+    @GetMapping(value = "/{studentId}/avatar-from-db")
+    public ResponseEntity<byte[]> downloadAvatar(@PathVariable Long studentId) {
+        Avatar avatar = avatarServise.findAvatarBySudentId(studentId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
         headers.setContentLength(avatar.getData().length);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
     }
-    @GetMapping(value = "/{id}/avatar-from-file")
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException{
-        Avatar avatar = avatarServise.findAvatar(id);
+    @GetMapping(value = "/{studentId}/avatar-from-file")
+    public void downloadAvatar(@PathVariable Long studentId, HttpServletResponse response) throws IOException{
+        Avatar avatar = avatarServise.findAvatarBySudentId(studentId);
         Path path = Path.of(avatar.getFilePath());
         try(InputStream is = Files.newInputStream(path);
             OutputStream os = response.getOutputStream();) {
@@ -50,4 +49,6 @@ public class AvatarController {
             is.transferTo(os);
         }
     }
+//    @DeleteMapping(value = "/{studentId}/avatar-from-db")
+//    public ResponseEntity<String> deleteAvatar(@PathVariable Long studentId) {
 }

@@ -6,6 +6,12 @@ import ru.hogwarts.school.entity.Student;
 import java.util.List;
 
 public class TestConstants {
+
+
+
+
+
+
 //    public static final Faculty TEST_FACULTY_1 = new Faculty(1L, "Gryffindor", "red" );
 //    public static final Faculty TEST_FACULTY_2 = new Faculty(2L, "Gryffinpul", "white" );
 //    public static final Faculty TEST_FACULTY_3 = new Faculty(3L, "Gryffinrot", "red" );

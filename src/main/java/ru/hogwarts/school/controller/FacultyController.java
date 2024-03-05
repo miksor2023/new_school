@@ -1,6 +1,8 @@
 package ru.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
@@ -19,8 +21,8 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty postFaculty(@RequestBody Faculty faculty) {
-        return facultyService.postFaculty(faculty);
+    public ResponseEntity<Faculty> postFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(facultyService.postFaculty(faculty));
     }
 
     @GetMapping
@@ -28,6 +30,12 @@ public class FacultyController {
     public List<Faculty> findAll() {
         return facultyService.findAll();
     }
+
+    @GetMapping("/{id}")
+    public Faculty getFaculty(@PathVariable Long id) {
+        return facultyService.getFaculty(id);
+    }
+
 
     @GetMapping(params = "color")
     @Operation(summary = "Get faculties by color")
@@ -41,14 +49,10 @@ public class FacultyController {
         return facultyService.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
     }
 
-    @GetMapping("/{id}")
-    public Faculty getFaculty(@PathVariable Long id) {
-        return facultyService.getFaculty(id);
-    }
-
     @GetMapping("/{id}/students")
-    public List<Student> getStudents(@RequestParam Long id) {
-        return facultyService.findByFaculty_Id(id);
+    @Operation(summary = "Get students of faculty")
+    public List<Student> getStudents(@PathVariable Long id) {
+        return facultyService.findStudentsByFaculty_Id(id);
     }
 
 
@@ -59,8 +63,9 @@ public class FacultyController {
 
 
     @DeleteMapping("/{id}")
-    public Faculty deleteFaculty(@PathVariable Long id) {
-        return facultyService.deleteFaculty(id);
+    public ResponseEntity<String> deleteFaculty(@PathVariable Long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.ok("Факультет с ID %d удалён".formatted(id));
     }
 
 

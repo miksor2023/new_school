@@ -33,10 +33,9 @@ public class FacultyService {
         }
         return facultyRepository.save(faculty);
     }
-    public Faculty deleteFaculty(Long id){
+    public void deleteFaculty(Long id){
         Faculty facultYToDelete = getFaculty(id);
         facultyRepository.deleteById(id);
-        return facultYToDelete;
     }
 
     public List<Faculty> findByColor(String color){
@@ -49,7 +48,7 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public List<Student> findByFaculty_Id(Long id){
+    public List<Student> findStudentsByFaculty_Id(Long id){
         Faculty faculty = getFaculty(id);
         return studentRepository.findByFaculty_Id(id);
     }

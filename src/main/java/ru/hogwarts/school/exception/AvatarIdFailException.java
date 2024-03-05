@@ -9,6 +9,6 @@ public class AvatarIdFailException extends IdFailException{
 
     @Override
     public String getMessage() {
-        return "Аватар с ID %d не найден".formatted(id);
+        return "Аватар для студента с ID %d не найден".formatted(id);
     }
 }

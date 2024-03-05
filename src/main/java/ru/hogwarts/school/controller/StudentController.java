@@ -1,6 +1,8 @@
 package ru.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
@@ -18,8 +20,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student postStudent(@RequestBody Student student) {
-        return studentService.postStudent(student);
+    public ResponseEntity<Student> postStudent(@RequestBody Student student) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(studentService.postStudent(student));
     }
 
     @GetMapping
@@ -35,18 +37,20 @@ public class StudentController {
         return studentService.findByAge(age);
     }
 
-    @GetMapping(params = {"lowerAge, upperAge"})
+    @GetMapping(params = {"lowerAge", "upperAge"})
     @Operation(summary = "Get students by age between")
-    public List<Student> getStudentsByAgeBetween(@RequestParam Integer lowerAge, @RequestParam Integer upperAge) {
+    public List<Student> getStudentsByAgeBetween(@RequestParam int lowerAge, @RequestParam int upperAge) {
         return studentService.findByAgeBetween(lowerAge, upperAge);
     }
 
     @GetMapping("{id}")
+    @Operation(summary = "Get student by ID")
     public Student getStudent(@PathVariable Long id) {
         return studentService.getStudent(id);
     }
 
     @GetMapping("{id}/faculty")
+    @Operation(summary = "Get faculty of student")
     public Faculty getFacultyOfStudent(@PathVariable Long id) {
         return studentService.getFaculty(id);
     }
@@ -58,8 +62,9 @@ public class StudentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
+        return ResponseEntity.ok("Студент с ID %d удалён".formatted(id));
     }
 
 }
