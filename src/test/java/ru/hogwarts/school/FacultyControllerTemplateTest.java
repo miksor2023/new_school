@@ -85,11 +85,6 @@ public class FacultyControllerTemplateTest {
 
 
     @Test
-    public void contextLoaded() throws Exception {
-        Assertions.assertThat(facultyController).isNotNull();
-    }
-
-    @Test
     public void postFacultyTest() throws Exception {
         Faculty returnedFaculty = restTemplate.postForObject("http://localhost:" + port + "/faculty", createFacultyToPost(), Faculty.class);
         Assertions.assertThat(returnedFaculty.getId()).isNotNull();

@@ -36,8 +36,8 @@ public class StudentControllerWebMvcTest {
     private FacultyRepository facultyRepository;
     @SpyBean
     private StudentService studentService;
-    @InjectMocks
-    private StudentController studentController;
+//    @InjectMocks
+//    private StudentController studentController;
     static Long testId = 1L;
     static String testStudentName = "ann";
     static String newStudentTestName = "rick";

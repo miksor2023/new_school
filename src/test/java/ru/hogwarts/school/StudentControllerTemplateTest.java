@@ -48,7 +48,8 @@ public class StudentControllerTemplateTest {
     static Integer newTestAge = 22;
     static int lowerAge = 20;
     static int upperAge = 23;
-    public Student postTestStudentWithFaculty(){
+
+    public Student postTestStudentWithFaculty() {
         Faculty facultyToPost = new Faculty();
         facultyToPost.setId(testId);
         facultyToPost.setName(testFacultyName);
@@ -68,7 +69,8 @@ public class StudentControllerTemplateTest {
         faculty.setColor(testColor);
         return facultyRepository.save(faculty);
     }
-    private Student createStudentToPost(){
+
+    private Student createStudentToPost() {
         Faculty faculty = createTestFaculty();
         Student student = new Student();
         student.setName(testStudentName);
@@ -76,23 +78,21 @@ public class StudentControllerTemplateTest {
         student.setFaculty(faculty);
         return student;
     }
-    private Student createStudentToUpdate(){
+
+    private Student createStudentToUpdate() {
         Student student = new Student();
         student.setName(newStudentTestName);
         student.setAge(newTestAge);
         return student;
     }
+
     @AfterEach
-    public void deleteAllTables(){
+    public void deleteAllTables() {
         studentRepository.deleteAll();
         facultyRepository.deleteAll();
     }
 
 
-    @Test
-    public void contextLoaded() throws Exception {
-        Assertions.assertThat(studentController).isNotNull();
-    }
     @Test
     public void postStudentTest() throws Exception {
         Student returnedStudent = restTemplate.postForObject("http://localhost:" + port + "/student", createStudentToPost(), Student.class);
@@ -108,6 +108,7 @@ public class StudentControllerTemplateTest {
         Assertions.assertThat(returnedStudent.getName()).isEqualTo(testStudentName);
         Assertions.assertThat(returnedStudent.getAge()).isEqualTo(testAge);
     }
+
     @Test
     public void getStudentsByAgeTest() throws Exception {
         studentRepository.save(createStudentToPost());
@@ -117,6 +118,7 @@ public class StudentControllerTemplateTest {
         List<Integer> ages = Arrays.stream(students).map(student -> student.getAge()).collect(Collectors.toList());
         Assertions.assertThat(ages).containsOnly(testAge);
     }
+
     @Test
     public void getStudentsByAgeBetweenTest() throws Exception {
         studentRepository.save(createStudentToPost());
@@ -126,6 +128,7 @@ public class StudentControllerTemplateTest {
         List<Integer> ages = Arrays.stream(students).map(student -> student.getAge()).collect(Collectors.toList());
         Assertions.assertThat(ages).contains(testAge);
     }
+
     @Test
     public void getFacultyOfStudentTest() throws Exception {
         Student postedStudent = studentRepository.save(createStudentToPost());
@@ -135,6 +138,7 @@ public class StudentControllerTemplateTest {
         Assertions.assertThat(actualFaculty).isEqualTo(expextedFaculty);
 
     }
+
     @Test
     public void updateStudentTest() throws Exception {
         Student postedStudent = studentRepository.save(createStudentToPost());
@@ -146,6 +150,7 @@ public class StudentControllerTemplateTest {
                 .exchange("http://localhost:" + port + "/student", HttpMethod.PUT, entity, Student.class);
         Assertions.assertThat(responce.getBody()).isEqualTo(studentToUpdate);
     }
+
     @Test
     public void deleteStudentTest() throws Exception {
         Student postedStudent = studentRepository.save(createStudentToPost());
@@ -154,11 +159,6 @@ public class StudentControllerTemplateTest {
         Assertions.assertThat(responce.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(responce.getBody()).isEqualTo("Студент с ID %d удалён".formatted(postedStudent.getId()));
     }
-
-
-
-
-
 
 
 }

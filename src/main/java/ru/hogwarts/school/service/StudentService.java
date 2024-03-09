@@ -22,11 +22,11 @@ public class StudentService {
 
     public Student postStudent(Student student) {
         student.setId(null);
-        Long facultyID = student.getFaculty().getId();
-        if (facultyID != null) {
-            Faculty faculty = facultyRepository.findById(facultyID).
-                    orElseThrow(() -> new FacultyIdFailException(facultyID));
-            student.setFaculty(faculty);
+        Faculty faculty = student.getFaculty();
+        if (faculty != null && faculty.getId() != null) {
+            Faculty facultyFromDB = facultyRepository.findById(faculty.getId()).
+                    orElseThrow(() -> new FacultyIdFailException(faculty.getId()));
+            student.setFaculty(facultyFromDB);
         }
         return studentRepository.save(student);
     }
