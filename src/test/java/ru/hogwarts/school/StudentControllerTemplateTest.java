@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 public class StudentControllerTemplateTest {
     @LocalServerPort
     private int port;
-    @Autowired
-    private StudentController studentController;
 
     @Autowired
     private StudentRepository studentRepository;
@@ -49,18 +47,6 @@ public class StudentControllerTemplateTest {
     static int lowerAge = 20;
     static int upperAge = 23;
 
-    public Student postTestStudentWithFaculty() {
-        Faculty facultyToPost = new Faculty();
-        facultyToPost.setId(testId);
-        facultyToPost.setName(testFacultyName);
-        facultyToPost.setColor(testColor);
-        Faculty postedFaculty = facultyRepository.save(facultyToPost);
-        Student student = new Student();
-        student.setName(testStudentName);
-        student.setAge(testAge);
-        student.setFaculty(postedFaculty);
-        return student;
-    }
 
     private Faculty createTestFaculty() {
         Faculty faculty = new Faculty();

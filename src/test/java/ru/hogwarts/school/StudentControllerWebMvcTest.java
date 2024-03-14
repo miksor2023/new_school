@@ -1,5 +1,7 @@
 package ru.hogwarts.school;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.hogwarts.school.controller.StudentController;
@@ -16,8 +19,10 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,8 +41,6 @@ public class StudentControllerWebMvcTest {
     private FacultyRepository facultyRepository;
     @SpyBean
     private StudentService studentService;
-//    @InjectMocks
-//    private StudentController studentController;
     static Long testId = 1L;
     static String testStudentName = "ann";
     static String newStudentTestName = "rick";
@@ -75,12 +78,7 @@ public class StudentControllerWebMvcTest {
         return student;
     }
 
-    private Student createStudentToUpdate() {
-        Student student = new Student();
-        student.setName(newStudentTestName);
-        student.setAge(newTestAge);
-        return student;
-    }
+
 
     @Test
     public void postStudentTest() throws Exception {
@@ -119,7 +117,16 @@ public class StudentControllerWebMvcTest {
                         .get("/student?age={testAge}", testAge)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(testAge.toString())));
+                .andExpect(content().string(containsString(testAge.toString())))
+                .andExpect(result -> {
+                    MockHttpServletResponse response = result.getResponse();
+                    List<Student> returnedStudents = objectMapper.readValue(response.getContentAsString(StandardCharsets.UTF_8),
+                            new TypeReference<List<Student>>() {
+                            });
+                    List<Integer> ages = returnedStudents.stream().map(stud -> stud.getAge()).collect(Collectors.toList());
+                    Assertions.assertThat(ages).containsOnly(testAge);
+                });
+
     }
     @Test
     public void getStudentsByAgeBetweenTest() throws Exception {
@@ -130,7 +137,14 @@ public class StudentControllerWebMvcTest {
                         .get("/student?lowerAge={lowerAge}&upperAge={upperAge}", lowerAge, upperAge)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(testAge.toString())));
+                .andExpect(result -> {
+                    MockHttpServletResponse response = result.getResponse();
+                    List<Student> returnedStudents = objectMapper.readValue(response.getContentAsString(StandardCharsets.UTF_8),
+                            new TypeReference<List<Student>>() {
+                            });
+                    List<Integer> ages = returnedStudents.stream().map(stud -> stud.getAge()).collect(Collectors.toList());
+                    Assertions.assertThat(ages).contains(testAge);
+                });
     }
     @Test
     public void getFacultyOfStudentTest() throws Exception {

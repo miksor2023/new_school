@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -42,15 +44,6 @@ public class AvatarServise {
         Files.deleteIfExists(filePath);
         byte[] avatarData = avatarFile.getBytes();
         Files.write(filePath, avatarData);
-
-//        try (
-//                InputStream is = avatarFile.getInputStream();
-//                OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-//                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//                BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-//        ) {
-//            bis.transferTo(bos);
-//        }
         Avatar avatar = avatarRepository.findByStudentId(studentId).orElse(new Avatar());
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
@@ -75,4 +68,12 @@ public class AvatarServise {
         return Pair.of(data, avatar.getMediaType());
     }
 
+    public List<Avatar> findAll() {
+       return avatarRepository.findAll();
+    }
+
+    public List<Avatar> grtAvatarsPaginated(int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
+    }
 }

@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/avatar")
@@ -30,28 +32,19 @@ public class AvatarController {
     public ResponseEntity<String> uploadAvatar(@RequestParam Long studentId, @RequestPart MultipartFile avatar) throws IOException {
         return ResponseEntity.ok(avatarServise.uploadAvatar(studentId, avatar));
     }
+
+    @GetMapping(params = {"page", "size"})
+    @Operation(summary = "get avatars paginated")
+    public List<Avatar> getAvatarsPaginated(@RequestParam int page, @RequestParam int size){
+        return avatarServise.grtAvatarsPaginated(page, size);
+    }
     @GetMapping(value = "/avatar-from-db")
     public ResponseEntity<byte[]> downloadAvatarFromDb(@RequestParam Long studentId) {
         return transform(avatarServise.findAvatarFromDb(studentId));
-//        Avatar avatar = avatarServise.findAvatarBySudentId(studentId);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-//        headers.setContentLength(avatar.getData().length);
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .headers(headers)
-//                .body(avatar.getData());
     }
     @GetMapping(value = "/avatar-from-file")
     public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId /*, HttpServletResponse response*/) throws IOException{
         return transform(avatarServise.findAvatarFromFile(studentId));
-//        Avatar avatar = avatarServise.findAvatarBySudentId(studentId);
-//        Path path = Path.of(avatar.getFilePath());
-//        try(InputStream is = Files.newInputStream(path);
-//            OutputStream os = response.getOutputStream();) {
-//            response.setStatus(200);
-//            response.setContentType(avatar.getMediaType());
-//            response.setContentLength((int) avatar.getFileSize());
-//            is.transferTo(os);
     }
     public ResponseEntity<byte[]> transform (Pair<byte[], String> pair){
         byte[] data = pair.getFirst();;

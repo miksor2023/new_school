@@ -23,6 +23,21 @@ public class StudentController {
     public ResponseEntity<Student> postStudent(@RequestBody Student student) {
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.postStudent(student));
     }
+    @GetMapping("/qty")
+    @Operation(summary = "get quantity of students")
+    public ResponseEntity<String> getStudentsQty(){
+        return ResponseEntity.ok("Количество студентов: %d".formatted(studentService.getStudensQty()));
+    }
+    @GetMapping("/average-age")
+    @Operation(summary = "get average age of students")
+    public ResponseEntity<String> getStudentsAverageAge(){
+        return ResponseEntity.ok("Средний возраст студентов: %d".formatted(studentService.getStudensAverageAge()));
+    }
+    @GetMapping("/last-five-students")
+    @Operation(summary = "get list of last five students")
+    public List<Student> getLastFive(){
+        return studentService.getLastFive();
+    }
 
     @GetMapping
     @Operation(summary = "Get all students")

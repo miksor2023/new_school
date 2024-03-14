@@ -32,8 +32,6 @@ public class FacultyControllerTemplateTest {
     @LocalServerPort
     private int port;
     @Autowired
-    private FacultyController facultyController;
-    @Autowired
     private StudentRepository studentRepository;
     @Autowired
     private FacultyRepository facultyRepository;

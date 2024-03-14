@@ -1,6 +1,8 @@
 package ru.hogwarts.school;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,8 +23,10 @@ import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.FacultyService;
 
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,14 +46,13 @@ public class FacultyControllerWebMvcTest {
     private StudentRepository studentRepository;
     @SpyBean
     private FacultyService facultyService;
-//    @InjectMocks
-//    private FacultyController facultyController;
 
     static Long testId = 1L;
+    static Long testId_2 = 2L;
     static String testName = "testFaculty";
     static String testColor = "testColor";
     static String newTestName = "newTestFaculty";
-    static String newTestColor = "newTeatColor";
+    static String newTestColor = "newTestColor";
     static Integer testAge = 21;
     static String testStudentName = "sally";
     static Integer newTestAge = 22;
@@ -62,6 +65,14 @@ public class FacultyControllerWebMvcTest {
         faculty.setId(testId);
         faculty.setName(testName);
         faculty.setColor(testColor);
+        return faculty;
+    }
+
+    private Faculty createAnotherFacultyToPost() {
+        Faculty faculty = new Faculty();
+        faculty.setId(testId_2);
+        faculty.setName(newTestName);
+        faculty.setColor(newTestColor);
         return faculty;
     }
 
@@ -131,13 +142,28 @@ public class FacultyControllerWebMvcTest {
                         .get("/faculty?nameOrColor={nameOrColor}", testName)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(testName)));
+                .andExpect(result -> {
+                    MockHttpServletResponse responce = result.getResponse();
+                    List<Faculty> returnedFaculties = objectMapper.readValue(responce.getContentAsString(StandardCharsets.UTF_8),
+                            new TypeReference<List<Faculty>>() {
+                            });
+                    List<String> names = returnedFaculties.stream().map(fac -> fac.getName()).collect(Collectors.toList());
+                    Assertions.assertThat(names).containsOnly(testName);
+                });
+
         when(facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(testColor, testColor)).thenReturn(faculties);
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/faculty?nameOrColor={nameOrColor}", testColor)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(testColor)));
+                .andExpect(result -> {
+                    MockHttpServletResponse response = result.getResponse();
+                    List<Faculty> returnedFaculties = objectMapper.readValue(response.getContentAsString(StandardCharsets.UTF_8),
+                            new TypeReference<List<Faculty>>() {
+                            });
+                    List<String> colors = returnedFaculties.stream().map(fac -> fac.getColor()).collect(Collectors.toList());
+                    Assertions.assertThat(colors).containsOnly(testColor);
+                });
     }
 
     @Test
@@ -173,12 +199,13 @@ public class FacultyControllerWebMvcTest {
                 .andExpect(jsonPath("$.name").value(newTestName))
                 .andExpect(jsonPath("$.color").value(newTestColor));
     }
+
     @Test
     public void deleteFacultyTest() throws Exception {
         Faculty faculty = createFacultyToPost();
         when(facultyRepository.findById(testId)).thenReturn(Optional.of(faculty));
         mockMvc.perform(MockMvcRequestBuilders
-                .delete("/faculty/{id}", faculty.getId()))
+                        .delete("/faculty/{id}", faculty.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Факультет с ID %d удалён".formatted(faculty.getId())));
     }
