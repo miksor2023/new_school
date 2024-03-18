@@ -7,6 +7,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.AvatarView;
 import ru.hogwarts.school.entity.Avatar;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.AvatarIdFailException;
@@ -72,8 +73,16 @@ public class AvatarServise {
        return avatarRepository.findAll();
     }
 
-    public List<Avatar> grtAvatarsPaginated(int pageNumber, int pageSize) {
+    public List<Avatar> getAvatarsPaginated(int pageNumber, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
+
+//    public AvatarView getAvatarsPaginated(int pageNumber, int pageSize) {
+//        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+//        return avatarRepository.findAll(pageRequest);
+//    }
+
+
+
 }

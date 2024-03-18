@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.AvatarView;
 import ru.hogwarts.school.entity.Avatar;
 import ru.hogwarts.school.service.AvatarServise;
 
@@ -36,18 +37,22 @@ public class AvatarController {
     @GetMapping(params = {"page", "size"})
     @Operation(summary = "get avatars paginated")
     public List<Avatar> getAvatarsPaginated(@RequestParam int page, @RequestParam int size){
-        return avatarServise.grtAvatarsPaginated(page, size);
+        return avatarServise.getAvatarsPaginated(page, size);
     }
+
     @GetMapping(value = "/avatar-from-db")
     public ResponseEntity<byte[]> downloadAvatarFromDb(@RequestParam Long studentId) {
         return transform(avatarServise.findAvatarFromDb(studentId));
     }
+
     @GetMapping(value = "/avatar-from-file")
-    public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId /*, HttpServletResponse response*/) throws IOException{
+    public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId /*, HttpServletResponse response*/) throws IOException {
         return transform(avatarServise.findAvatarFromFile(studentId));
     }
-    public ResponseEntity<byte[]> transform (Pair<byte[], String> pair){
-        byte[] data = pair.getFirst();;
+
+    public ResponseEntity<byte[]> transform(Pair<byte[], String> pair) {
+        byte[] data = pair.getFirst();
+        ;
         return ResponseEntity.ok()
                 .contentLength(data.length)
                 .contentType(MediaType.parseMediaType(pair.getSecond()))
