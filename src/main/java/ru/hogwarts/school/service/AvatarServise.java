@@ -23,7 +23,6 @@ import java.util.List;
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
-@Transactional
 public class AvatarServise {
     @Value("${path.to.avatars.folder}")
     private String avatarDir;

@@ -74,7 +74,7 @@ public class StudentService {
         return studentRepository.getStudentsQty();
     }
 
-    public int getStudensAverageAge() {
+    public long getStudensAverageAge() {
         return studentRepository.getStudensAverageAge();
     }
 
