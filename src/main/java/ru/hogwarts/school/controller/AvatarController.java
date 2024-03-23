@@ -1,28 +1,22 @@
 package ru.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.util.Pair;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.dto.AvatarView;
+import ru.hogwarts.school.dto.AvatarDto;
 import ru.hogwarts.school.entity.Avatar;
 import ru.hogwarts.school.service.AvatarServise;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
-@RequestMapping("/avatar")
+@RequestMapping(AvatarController.BASE_URI)
 public class AvatarController {
+    public static final String BASE_URI = "/avatar";
     private AvatarServise avatarServise;
 
     public AvatarController(AvatarServise avatarServise) {
@@ -36,7 +30,7 @@ public class AvatarController {
 
     @GetMapping(params = {"page", "size"})
     @Operation(summary = "get avatars paginated")
-    public List<Avatar> getAvatarsPaginated(@RequestParam int page, @RequestParam int size){
+    public List<AvatarDto> getAvatarsPaginated(@RequestParam int page, @RequestParam int size){
         return avatarServise.getAvatarsPaginated(page, size);
     }
 
@@ -46,7 +40,7 @@ public class AvatarController {
     }
 
     @GetMapping(value = "/avatar-from-file")
-    public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId /*, HttpServletResponse response*/) throws IOException {
+    public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId) throws IOException {
         return transform(avatarServise.findAvatarFromFile(studentId));
     }
 

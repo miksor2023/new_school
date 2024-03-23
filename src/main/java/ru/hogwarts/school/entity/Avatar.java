@@ -18,6 +18,10 @@ public class Avatar {
 //    @JoinColumn(name = "student_id")
     private Student student;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getFilePath() {
         return filePath;
     }
