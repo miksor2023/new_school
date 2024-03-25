@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.transaction.Transactional;
 import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +34,12 @@ public class AvatarController {
     public List<AvatarDto> getAvatarsPaginated(@RequestParam int page, @RequestParam int size){
         return avatarServise.getAvatarsPaginated(page, size);
     }
-
+    @Transactional
     @GetMapping(value = "/avatar-from-db")
     public ResponseEntity<byte[]> downloadAvatarFromDb(@RequestParam Long studentId) {
         return transform(avatarServise.findAvatarFromDb(studentId));
     }
-
+    @Transactional
     @GetMapping(value = "/avatar-from-file")
     public ResponseEntity<byte[]> downloadAvatarFromFile(@RequestParam Long studentId) throws IOException {
         return transform(avatarServise.findAvatarFromFile(studentId));
