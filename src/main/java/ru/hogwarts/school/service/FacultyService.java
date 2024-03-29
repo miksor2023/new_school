@@ -10,6 +10,7 @@ import ru.hogwarts.school.exception.StudentIdFailException;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 public class FacultyService {
     private final FacultyRepository facultyRepository;
     public final StudentRepository studentRepository;
+
 
 
     public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
@@ -68,6 +70,12 @@ public class FacultyService {
         logger.info("Find all students of faculty by ID method was invoked");
         Faculty faculty = getFaculty(id);
         return studentRepository.findByFaculty_Id(id);
+    }
+    public String getLongestName(){
+        return facultyRepository.findAll().stream()
+                .map(f -> f.getName())
+                .max(Comparator.comparing(n ->n.toCharArray().length))
+                .get();
     }
 
 

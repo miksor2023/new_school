@@ -95,13 +95,26 @@ public class StudentService {
         return studentRepository.getStudentsQty();
     }
 
-    public long getStudensAverageAge() {
+    public double getStudensAverageAge() {
         logger.info("Get average age of students method was invoked");
-        return studentRepository.getStudensAverageAge();
+        return studentRepository.findAll().stream()
+                .mapToInt((s -> s.getAge()))
+                //.mapToDouble(s -> Double.valueOf(s))
+                .average()
+                .getAsDouble();
+        //return studentRepository.getStudensAverageAge();
     }
 
     public List<Student> getLastFive() {
         logger.info("Get last five students method was invoked");
         return studentRepository.getLastFive();
     }
+
+    public List<String> getNamesStartsWithA() {
+        return studentRepository.findAll().stream()
+                .map(s -> s.getName().toUpperCase())
+                .filter(n -> n.startsWith("A"))
+                .sorted()
+                .toList();
+     }
 }

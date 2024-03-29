@@ -31,7 +31,7 @@ public class StudentController {
     @GetMapping("/average-age")
     @Operation(summary = "get average age of students")
     public ResponseEntity<String> getStudentsAverageAge(){
-        return ResponseEntity.ok("Средний возраст студентов: %d".formatted(studentService.getStudensAverageAge()));
+        return ResponseEntity.ok("Средний возраст студентов: %.2f".formatted(studentService.getStudensAverageAge()));
     }
     @GetMapping("/last-five-students")
     @Operation(summary = "get list of last five students")
@@ -68,6 +68,11 @@ public class StudentController {
     @Operation(summary = "Get faculty of student")
     public Faculty getFacultyOfStudent(@PathVariable Long id) {
         return studentService.getFaculty(id);
+    }
+    @GetMapping("/names")
+    @Operation(summary = "Get list of names starts with A")
+    public List<String> getNamesStartsWithA(){
+        return studentService.getNamesStartsWithA();
     }
 
 

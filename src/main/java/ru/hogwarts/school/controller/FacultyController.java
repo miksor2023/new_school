@@ -56,6 +56,13 @@ public class FacultyController {
     }
 
 
+    @GetMapping("/longest-name")
+    @Operation(summary = "Get faculty with longest name")
+    public ResponseEntity<String> getLongestName() {
+        return ResponseEntity.ok("Самое длинное название факультета: " + facultyService.getLongestName());
+    }
+
+
     @PutMapping
     public Faculty updateFaculty(@RequestBody Faculty faculty) {
         return facultyService.updateFaculty(faculty);
