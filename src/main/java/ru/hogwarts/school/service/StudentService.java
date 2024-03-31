@@ -16,12 +16,15 @@ import java.util.*;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
+    private Object flag = new Object();
 
     public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
         this.studentRepository = studentRepository;
         this.facultyRepository = facultyRepository;
     }
     Logger logger = LoggerFactory.getLogger(StudentService.class);
+
+
 
     public Student postStudent(Student student) {
         logger.info("Post student method was invoked");
@@ -117,4 +120,37 @@ public class StudentService {
                 .sorted()
                 .toList();
      }
+    public void getStudentsParallel() {
+        List<Student> students = studentRepository.findAll();
+        System.out.println(students.get(0));
+        System.out.println(students.get(1));
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+        }).start();
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+        }).start();
+
+    }
+    public void getStudentsSynchronized() {
+        List<Student> students = studentRepository.findAll();
+        printStudentToConsole(students.get(0));
+        printStudentToConsole(students.get(1));
+        new Thread(() -> {
+            printStudentToConsole(students.get(2));
+            printStudentToConsole(students.get(3));
+        }).start();
+        new Thread(() -> {
+            printStudentToConsole(students.get(4));
+            printStudentToConsole(students.get(5));
+        }).start();
+
+    }
+    private void printStudentToConsole(Student student){
+        synchronized (flag) {
+            System.out.println(student);
+        }
+    }
 }

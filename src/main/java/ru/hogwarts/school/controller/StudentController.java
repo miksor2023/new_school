@@ -23,6 +23,15 @@ public class StudentController {
     public ResponseEntity<Student> postStudent(@RequestBody Student student) {
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.postStudent(student));
     }
+    @GetMapping("/print-parallel")
+    public void getStudentsParallel(){
+        studentService.getStudentsParallel();
+    }
+    @GetMapping("/print-synchronized")
+    public void getStudentsSynchronized(){
+        studentService.getStudentsSynchronized();
+    }
+
     @GetMapping("/qty")
     @Operation(summary = "get quantity of students")
     public ResponseEntity<String> getStudentsQty(){
