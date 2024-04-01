@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.exception.FacultyIdFailException;
@@ -121,21 +122,23 @@ public class StudentService {
                 .toList();
      }
     public void getStudentsParallel() {
-        List<Student> students = studentRepository.findAll();
-        System.out.println(students.get(0));
-        System.out.println(students.get(1));
+        logger.info("Get list of students by 3 streams method was invoked");
+        List<Student> students = studentRepository.findAll(PageRequest.of(0,6)).getContent();
+        logger.info(students.get(0).toString());
+        logger.info(students.get(1).toString());
         new Thread(() -> {
-            System.out.println(students.get(2));
-            System.out.println(students.get(3));
+            logger.info(students.get(2).toString());
+            logger.info(students.get(3).toString());
         }).start();
         new Thread(() -> {
-            System.out.println(students.get(4));
-            System.out.println(students.get(5));
+            logger.info(students.get(4).toString());
+            logger.info(students.get(5).toString());
         }).start();
 
     }
     public void getStudentsSynchronized() {
-        List<Student> students = studentRepository.findAll();
+        logger.info("Get list of students by 3 synchronized streams method was invoked");
+        List<Student> students = studentRepository.findAll(PageRequest.of(0,6)).getContent();
         printStudentToConsole(students.get(0));
         printStudentToConsole(students.get(1));
         new Thread(() -> {
@@ -148,9 +151,7 @@ public class StudentService {
         }).start();
 
     }
-    private void printStudentToConsole(Student student){
-        synchronized (flag) {
-            System.out.println(student);
-        }
+    private synchronized void printStudentToConsole(Student student){
+            logger.info(student.toString());
     }
 }
