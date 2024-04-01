@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.exception.FacultyIdFailException;
@@ -16,12 +17,15 @@ import java.util.*;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
+    private Object flag = new Object();
 
     public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
         this.studentRepository = studentRepository;
         this.facultyRepository = facultyRepository;
     }
     Logger logger = LoggerFactory.getLogger(StudentService.class);
+
+
 
     public Student postStudent(Student student) {
         logger.info("Post student method was invoked");
@@ -117,4 +121,37 @@ public class StudentService {
                 .sorted()
                 .toList();
      }
+    public void getStudentsParallel() {
+        logger.info("Get list of students by 3 streams method was invoked");
+        List<Student> students = studentRepository.findAll(PageRequest.of(0,6)).getContent();
+        logger.info(students.get(0).toString());
+        logger.info(students.get(1).toString());
+        new Thread(() -> {
+            logger.info(students.get(2).toString());
+            logger.info(students.get(3).toString());
+        }).start();
+        new Thread(() -> {
+            logger.info(students.get(4).toString());
+            logger.info(students.get(5).toString());
+        }).start();
+
+    }
+    public void getStudentsSynchronized() {
+        logger.info("Get list of students by 3 synchronized streams method was invoked");
+        List<Student> students = studentRepository.findAll(PageRequest.of(0,6)).getContent();
+        printStudentToConsole(students.get(0));
+        printStudentToConsole(students.get(1));
+        new Thread(() -> {
+            printStudentToConsole(students.get(2));
+            printStudentToConsole(students.get(3));
+        }).start();
+        new Thread(() -> {
+            printStudentToConsole(students.get(4));
+            printStudentToConsole(students.get(5));
+        }).start();
+
+    }
+    private synchronized void printStudentToConsole(Student student){
+            logger.info(student.toString());
+    }
 }
